@@ -34,8 +34,8 @@ DEP_SRCS = parameters.v
 SRCS = $(TOP_SRC) $(DEP_SRCS)
 
 SRC_DIR = ../../src
-CLIB_DIR = ../../src/clib
 ROUTER_DIR = ../../src/router
+CLIB_DIR = ../../src/router/clib
 DW_DIR = $(SYNOPSYS)/dw/sim_ver
 
 VCS_FLAGS = +lint=all,noVCDE +v2k +libext+.v -timescale=1ns/1ns -Mupdate -debug -full64
