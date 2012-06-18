@@ -438,6 +438,7 @@ module tc_router_wrap
        .input_stage_can_hold(input_stage_can_hold),
        .fb_regfile_type(fb_regfile_type),
        .fb_mgmt_type(fb_mgmt_type),
+       .fb_fast_peek(fb_fast_peek),
        .explicit_pipeline_register(explicit_pipeline_register),
        .gate_buffer_write(gate_buffer_write),
        .dual_path_alloc(dual_path_alloc),
