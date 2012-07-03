@@ -95,6 +95,12 @@ module tc_router_wrap
      = (flow_ctrl_type == `FLOW_CTRL_TYPE_CREDIT) ? (1 + vc_idx_width) :
        -1;
    
+   // enable link power management
+   parameter enable_link_pm = 1;
+   
+   // width of link management signals
+   localparam link_ctrl_width = enable_link_pm ? 1 : 0;
+   
    // width of flit control signals
    localparam flit_ctrl_width
      = (packet_format == `PACKET_FORMAT_HEAD_TAIL) ? 
@@ -106,7 +112,8 @@ module tc_router_wrap
        -1;
    
    // channel width
-   localparam channel_width = flit_ctrl_width + flit_data_width;
+   localparam channel_width
+     = link_ctrl_width + flit_ctrl_width + flit_data_width;
    
    // select set of feedback polynomials used for LFSRs
    parameter lfsr_index = 0;
@@ -341,6 +348,7 @@ module tc_router_wrap
 		    .flow_ctrl_bypass(flow_ctrl_bypass),
 		    .max_payload_length(max_payload_length),
 		    .min_payload_length(min_payload_length),
+		    .enable_link_pm(enable_link_pm),
 		    .flit_data_width(flit_data_width),
 		    .error_capture_mode(error_capture_mode),
 		    .routing_type(routing_type),
@@ -384,7 +392,9 @@ module tc_router_wrap
 		assign channel_out = {channel_width{1'b0}};
 		
 		wire [0:flit_ctrl_width-1] flit_ctrl_in;
-		assign flit_ctrl_in = channel_in[0:flit_ctrl_width-1];
+		assign flit_ctrl_in
+		  = channel_in[link_ctrl_width:
+			       link_ctrl_width+flit_ctrl_width-1];
 		
 		assign flow_ctrl_out = flit_ctrl_in[0:flow_ctrl_width-1];
 		
@@ -429,6 +439,7 @@ module tc_router_wrap
        .max_payload_length(max_payload_length),
        .min_payload_length(min_payload_length),
        .router_type(router_type),
+       .enable_link_pm(enable_link_pm),
        .flit_data_width(flit_data_width),
        .error_capture_mode(error_capture_mode),
        .restrict_turns(restrict_turns),

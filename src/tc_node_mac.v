@@ -139,6 +139,12 @@ module tc_node_mac
    // total number of bits required to represent maximum packet length
    localparam packet_length_width = clogb(max_packet_length);
    
+   // enable link power management
+   parameter enable_link_pm = 1;
+   
+   // width of link management signals
+   localparam link_ctrl_width = enable_link_pm ? 1 : 0;
+   
    // width of flit control signals
    localparam flit_ctrl_width
      = (packet_format == `PACKET_FORMAT_HEAD_TAIL) ? 
@@ -153,7 +159,8 @@ module tc_node_mac
    parameter flit_data_width = 64;
    
    // channel width
-   localparam channel_width = flit_ctrl_width + flit_data_width;
+   localparam channel_width
+     = link_ctrl_width + flit_ctrl_width + flit_data_width;
    
    // include error checking logic
    parameter error_capture_mode = `ERROR_CAPTURE_MODE_NO_HOLD;
@@ -818,8 +825,7 @@ module tc_node_mac
 	   assign sel_mc_rv_unmasked[num_message_classes-1] = 1'b1;
 	   
 	   c_lod
-	     #(.width(num_message_classes),
-	       .num_priorities(1))
+	     #(.width(num_message_classes))
 	   sel_mc_rv_lod
 	     (.data_in_pr(sel_mc_rv_unmasked),
 	      .data_out_pr(sel_mc_rv),
@@ -1057,6 +1063,7 @@ module tc_node_mac
        .max_payload_length(max_payload_length),
        .min_payload_length(min_payload_length),
        .route_info_width(route_info_width),
+       .enable_link_pm(enable_link_pm),
        .flit_data_width(flit_data_width),
        .reset_type(reset_type))
    chi
@@ -1072,18 +1079,22 @@ module tc_node_mac
       .flit_data_out(flit_data_in),
       .flit_sel_out_ivc(flit_sel_in_ivc));
    
+   wire 		      cho_active;
+   assign cho_active = packet_valid_q;
+   
    wire 		      flit_valid_out;
    wire 		      flit_tail_out;
    wire [0:flit_data_width-1] flit_data_out;
    rtr_channel_output
      #(.num_vcs(num_vcs),
        .packet_format(packet_format),
+       .enable_link_pm(enable_link_pm),
        .flit_data_width(flit_data_width),
        .reset_type(reset_type))
    cho
      (.clk(clk),
       .reset(reset),
-      .active(active_q),
+      .active(cho_active),
       .flit_valid_in(flit_valid_out),
       .flit_head_in(flit_head_out),
       .flit_tail_in(flit_tail_out),
@@ -1624,8 +1635,7 @@ module tc_node_mac
 		
 		wire [0:num_plength_vals-1] 	 plength_select;
 		c_lod
-		  #(.width(num_plength_vals),
-		    .num_priorities(1))
+		  #(.width(num_plength_vals))
 		plength_select_lod
 		  (.data_in_pr(plength_select_unmasked),
 		   .data_out_pr(plength_select),
