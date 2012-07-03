@@ -1009,7 +1009,7 @@ module tc_node_mac
 		c_arbiter
 		  #(.num_ports(num_vcs_per_class),
 		    .num_priorities(2),
-		    .arbiter_type(`ARBITER_TYPE_ROUND_ROBIN),
+		    .arbiter_type(`ARBITER_TYPE_ROUND_ROBIN_BINARY),
 		    .reset_type(reset_type))
 		gnt_ocvc_arb
 		  (.clk(clk),
