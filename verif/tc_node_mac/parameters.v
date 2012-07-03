@@ -30,7 +30,7 @@
 //==============================================================================
 
 // select network topology
-parameter topology = `TOPOLOGY_FBFLY;
+parameter topology = `TOPOLOGY_MESH;
 
 // total buffer size per port in flits
 parameter buffer_size = 16;
@@ -39,7 +39,7 @@ parameter buffer_size = 16;
 parameter num_message_classes = 2;
 
 // number of resource classes (e.g. minimal, adaptive)
-parameter num_resource_classes = 2;
+parameter num_resource_classes = 1;
 
 // number of VCs per class
 parameter num_vcs_per_class = 1;
@@ -51,7 +51,7 @@ parameter num_nodes = 64;
 parameter num_dimensions = 2;
 
 // number of nodes per router (a.k.a. concentration factor)
-parameter num_nodes_per_router = 4;
+parameter num_nodes_per_router = 1;
 
 // select packet format
 parameter packet_format = `PACKET_FORMAT_EXPLICIT_LENGTH;
@@ -69,18 +69,18 @@ parameter max_payload_length = 4;
 parameter min_payload_length = 0;
 
 // select router implementation
-parameter router_type = `ROUTER_TYPE_COMBINED;
+parameter router_type = `ROUTER_TYPE_VC;
 
 // width of flit payload data
-parameter flit_data_width = 32;
+parameter flit_data_width = 64;
 
-// include error checking logic
+// configure error checking logic
 parameter error_capture_mode = `ERROR_CAPTURE_MODE_NO_HOLD;
 
 // filter out illegal destination ports
 // (the intent is to allow synthesis to optimize away the logic associated with 
 // such turns)
-parameter restrict_turns = 0;
+parameter restrict_turns = 1;
 
 // store lookahead routing info in pre-decoded form
 // (only useful with dual-path routing enable)
@@ -105,7 +105,7 @@ parameter fb_mgmt_type = `FB_MGMT_TYPE_STATIC;
 parameter fb_fast_peek = 1;
 
 // use explicit pipeline register between flit buffer and crossbar?
-parameter explicit_pipeline_register = 0;
+parameter explicit_pipeline_register = 1;
 
 // gate flit buffer write port if bypass succeeds
 // (requires explicit pipeline register; may increase cycle time)
@@ -134,7 +134,7 @@ parameter elig_mask = `ELIG_MASK_FULL;
 parameter vc_alloc_type = `VC_ALLOC_TYPE_SEP_IF;
 
 // select which arbiter type to use for VC allocator
-parameter vc_alloc_arbiter_type = `ARBITER_TYPE_ROUND_ROBIN;
+parameter vc_alloc_arbiter_type = `ARBITER_TYPE_ROUND_ROBIN_BINARY;
 
 // prefer empty VCs over non-empty ones in VC allocation
 parameter vc_alloc_prefer_empty = 0;
@@ -143,12 +143,12 @@ parameter vc_alloc_prefer_empty = 0;
 parameter sw_alloc_type = `SW_ALLOC_TYPE_SEP_IF;
 
 // select which arbiter type to use for switch allocator
-parameter sw_alloc_arbiter_type = `ARBITER_TYPE_ROUND_ROBIN;
+parameter sw_alloc_arbiter_type = `ARBITER_TYPE_ROUND_ROBIN_BINARY;
 
 // select speculation type for switch allocator
-parameter sw_alloc_spec_type = `SW_ALLOC_SPEC_TYPE_REQ;
+parameter sw_alloc_spec_type = `SW_ALLOC_SPEC_TYPE_PRIO;
 
 // select implementation variant for crossbar
-parameter crossbar_type = `CROSSBAR_TYPE_TRISTATE;
+parameter crossbar_type = `CROSSBAR_TYPE_MUX;
 
 parameter reset_type = `RESET_TYPE_ASYNC;
