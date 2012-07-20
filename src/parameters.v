@@ -104,6 +104,12 @@ parameter fb_regfile_type = `REGFILE_TYPE_FF_2D;
 // select flit buffer management scheme
 parameter fb_mgmt_type = `FB_MGMT_TYPE_STATIC;
 
+// EXPERIMENTAL:
+// for dynamic buffer management, only reserve a buffer slot for a VC while it 
+// is active (i.e., while a packet is partially transmitted)
+// (NOTE: This is currently broken!)
+parameter disable_static_reservations = 0;
+
 // improve timing for peek access
 parameter fb_fast_peek = 1;
 
