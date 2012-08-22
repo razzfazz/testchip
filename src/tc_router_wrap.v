@@ -95,9 +95,6 @@ module tc_router_wrap
      = (flow_ctrl_type == `FLOW_CTRL_TYPE_CREDIT) ? (1 + vc_idx_width) :
        -1;
    
-   // enable link power management
-   parameter enable_link_pm = 1;
-   
    // width of link management signals
    localparam link_ctrl_width = enable_link_pm ? 1 : 0;
    
@@ -455,7 +452,7 @@ module tc_router_wrap
        .explicit_pipeline_register(explicit_pipeline_register),
        .gate_buffer_write(gate_buffer_write),
        .dual_path_alloc(dual_path_alloc),
-       .dual_path_allow_conflicts(dual_path_alloc_conflicts),
+       .dual_path_allow_conflicts(dual_path_allow_conflicts),
        .dual_path_mask_on_ready(dual_path_mask_on_ready),
        .precomp_ivc_sel(precomp_ivc_sel),
        .precomp_ip_sel(precomp_ip_sel),
